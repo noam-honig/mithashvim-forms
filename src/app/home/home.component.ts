@@ -14,9 +14,12 @@ export class HomeComponent implements OnInit {
   x = '';
   form = new DeliveryFormController(this.remult);
   async ngOnInit() {
-    let id = +new URLSearchParams(window.location.search).get('id')!;
+    let id = new URLSearchParams(window.location.search).get('id')!;
+    if (id) {
+      id = id.replace(/"/g, "");
+    }
     try {
-      await this.form.load(id)
+      await this.form.load(+id)
     } catch { }
   }
   async updateDone() {
