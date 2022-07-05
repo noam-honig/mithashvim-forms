@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Remult, ValueConverters } from 'remult';
-import { DeliveryFormController } from './delivery-form.controller';
+import { DeliveryFormController, Item } from './delivery-form.controller';
 
 @Component({
   selector: 'app-home',
@@ -20,10 +20,18 @@ export class HomeComponent implements OnInit {
     }
     try {
       await this.form.load(+id)
+      this.expectedItems = this.form.items.filter(x => x.quantity > 0);
+      this.sortedItems = [...this.expectedItems, ...this.form.items.filter(x => !x.quantity)];
     } catch { }
   }
+  expectedItems: Item[] = [];
+  sortedItems: Item[] = [];
   async updateDone() {
     let d = new Date();
+    for (const item of this.form.items) {
+      if (item.quantity)
+        item.quantity = +item.quantity;
+    }
     await this.form.updateDone(ValueConverters.DateOnly.toJson!(d),
       new Date().toTimeString().substring(0, 8))
   }

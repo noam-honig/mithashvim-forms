@@ -2,6 +2,14 @@ import { BackendMethod, Controller, ControllerBase, Fields } from "remult";
 import { getControllerRef } from "remult/src/remult3";
 import { gql } from "./getGraphQL";
 
+export type Item = {
+    id: number;
+    name: string;
+    quantity: number;
+    actualQuantity: number;
+    notes: string;
+};
+
 @Controller("deliveryForm")
 export class DeliveryFormController extends ControllerBase {
     @Fields.integer()
@@ -27,11 +35,7 @@ export class DeliveryFormController extends ControllerBase {
     @Fields.boolean()
     driverSign = false;
     @Fields.object()
-    items: {
-        name: string,
-        quantity: number,
-        notes: string
-    }[] = [];
+    items: Item[] = [];
     @BackendMethod({ allowed: true })
     async load(deliveryId: number) {
         console.log(deliveryId)
@@ -84,6 +88,7 @@ query ($id: Int!) {
         for (const subItem of item.subitems) {
             let notes = '';
             let quantity = 0;
+            let actualQuantity = null;
             for (const col of subItem.column_values) {
                 switch (col.id) {
                     case "numbers":
@@ -91,12 +96,21 @@ query ($id: Int!) {
                         break;
                     case "text":
                         notes = JSON.parse(col.value);
+                        break;
+                    case "dup__of_____":
+                        actualQuantity = JSON.parse(col.value);
+                        break;
+
                 }
             }
+            if (actualQuantity == null)
+                actualQuantity = quantity;
             this.items.push({
+                id: subItem.id,
                 name: subItem.name,
                 quantity,
-                notes
+                notes,
+                actualQuantity
             })
         }
 
@@ -115,20 +129,27 @@ query ($id: Int!) {
                 date, time
             })
         }
+        for (const item of this.items) {
+            await this.update(2673928289, item.id, "dup__of_____", item.actualQuantity);
+        }
+        this.update(2673923561, this.id, "date3", value);
 
-        console.log(await gql({ id: 2862398985, value }, `#graphql
-       mutation ($id: Int!,$value:JSON!) {
-  change_column_value(
-    item_id:$id
-    column_id:"date3",
-    board_id:2673923561,
-    value:$value
-  ) {
-    id
-  }
-}
-        `));
         this.driverSign = !this.driverSign;
+    }
+    async update(board: number, id: number, column_id: string, value: any) {
+        const values = { id: +id, value, board, column_id };
+        console.log("Update",values,"=", await gql(values, `#graphql
+        mutation ($id: Int!,$value:JSON!,$board:Int!,$column_id:String!) {
+   change_column_value(
+     item_id:$id
+     column_id:$column_id,
+     board_id:$board,
+     value:$value
+   ) {
+     id
+   }
+ }
+         `));
     }
 
 }

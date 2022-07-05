@@ -33,8 +33,19 @@
   <div>
     <strong>פריטים לאיסוף</strong>
     <mat-card>
-      <div *ngFor="let item of form.items">
+      <div *ngFor="let item of expectedItems">
         {{item.quantity}} {{item.name}} {{item.notes?" - "+item.notes:undefined}}
+      </div>
+    </mat-card>
+  </div>
+  <div>
+    <strong>פריטים שנאספו בפועל - יש לעדכן כמויות</strong>
+    <mat-card>
+      <div *ngFor="let item of sortedItems">
+        <mat-form-field class="example-full-width" appearance="outline" style="width:50px">
+          <input type="tel" matInput [(ngModel)]="item.actualQuantity" />
+        </mat-form-field>
+        {{item.name}} {{item.notes?" - "+item.notes:undefined}}
       </div>
     </mat-card>
   </div>
