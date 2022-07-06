@@ -95,7 +95,7 @@ query ($id: Int!) {
         } = data.boards[0].items[0];
         this.id = deliveryId;
         this.name = item.name;
-        console.table(item.column_values);
+        //console.table(item.column_values);
         for (const f of this.$.toArray()) {
             if (f.metadata.options.monday) {
                 let c: any = item.column_values.find((x: any) => x.id == f.metadata.options.monday);
@@ -200,11 +200,11 @@ query ($id: Int!) {
    }
  }
          `);
-            if (true) {
+            if (false) {
                 console.log(values, result);
             }
         } catch (err) {
-            console.log(err);
+            console.error(err);
         }
     }
 
