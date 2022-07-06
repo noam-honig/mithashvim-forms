@@ -11,7 +11,10 @@ export type Item = {
 
 @FieldType<MondayDate>({
     valueConverter: {
-        fromDb: x => x,
+        fromDb: x => {
+            if (x?.date) return x;
+            return null;
+        },
         toDb: x => x
     }
 
