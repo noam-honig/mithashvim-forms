@@ -20,6 +20,7 @@ export class HomeComponent implements OnInit {
     }
     try {
       await this.form.load(+id)
+      console.log(this.form.driverSign);
       this.expectedItems = this.form.items.filter(x => x.quantity > 0);
       this.sortedItems = [...this.expectedItems, ...this.form.items.filter(x => !x.quantity)];
     } catch { }
@@ -27,13 +28,16 @@ export class HomeComponent implements OnInit {
   expectedItems: Item[] = [];
   sortedItems: Item[] = [];
   async updateDone() {
-    let d = new Date();
     for (const item of this.form.items) {
       if (item.quantity)
-        item.quantity = +item.quantity;
+      item.quantity = +item.quantity;
     }
+    let d = new Date();
     await this.form.updateDone(ValueConverters.DateOnly.toJson!(d),
       new Date().toTimeString().substring(0, 8))
+  }
+  sameDate() {
+    return this.form.driverSign?.date == ValueConverters.DateOnly.toJson!(new Date());
   }
   openWaze() {
     const address = encodeURI(this.form.street + " " + this.form.city);

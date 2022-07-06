@@ -38,7 +38,7 @@
       </div>
     </mat-card>
   </div>
-  <div>
+  <div *ngIf="!form.driverSign">
     <strong>פריטים שנאספו בפועל - יש לעדכן כמויות</strong>
     <mat-card>
       <div *ngFor="let item of sortedItems">
@@ -49,7 +49,27 @@
       </div>
     </mat-card>
   </div>
+  <div *ngIf="form.driverSign">
+    <strong>פריטים שנאספו בפועל</strong>
+    <mat-card>
+      <ng-container *ngFor="let item of sortedItems">
+        <div *ngIf="item.actualQuantity">
+
+          {{item.actualQuantity}} {{item.name}} {{item.notes?" - "+item.notes:undefined}}
+        </div>
+      </ng-container>
+    </mat-card>
+  </div>
   <button mat-raised-button color="primary" *ngIf="!form.driverSign" (click)="updateDone()">חתום ואשר איסוף</button>
-  <button mat-raised-button color="accent" *ngIf="form.driverSign" (click)="updateDone()">בטל חתימה</button>
+  <div *ngIf="form.driverSign" style="display: flex;
+  flex-direction: column;
+  align-items: center;">
+    ✅ הטופס נחתם לאחרונה ע"י {{form.driverName}} בשעה {{form.driverSign?.time}}
+
+    <a *ngIf="sameDate()" (click)="!!form.cancelSign();$event.preventDefault()" href="">לביטול חתימה
+      ועדכון כמויות לחץ כאן</a>
+    <div *ngIf="!sameDate()">הטופס נעול</div>
+  </div>
+
 </div>
 <div *ngIf="!form.id">טופס לא נמצא</div>

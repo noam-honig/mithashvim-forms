@@ -10,12 +10,14 @@ import { ShowDialogOnErrorErrorHandler } from './common/dialog';
 import { JwtModule } from '@auth0/angular-jwt';
 import { AuthService } from './auth.service';
 import { terms } from './terms';
+import { ContactSignComponent } from './contact-sign/contact-sign.component';
 
 const defaultRoute = terms.home;
 const routes: Routes = [
   { path: defaultRoute, component: HomeComponent },
+  { path: 'contact-sign', component: ContactSignComponent },
   { path: terms.userAccounts, component: UsersComponent, canActivate: [AdminGuard] },
-  { path: '**', redirectTo: '/'+defaultRoute, pathMatch: 'full' }
+  { path: '**', redirectTo: '/' + defaultRoute, pathMatch: 'full' }
 
 ];
 
