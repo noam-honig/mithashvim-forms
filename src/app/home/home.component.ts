@@ -20,7 +20,6 @@ export class HomeComponent implements OnInit {
     }
     try {
       await this.form.load(+id)
-      console.log(this.form.driverSign);
       this.expectedItems = this.form.items.filter(x => x.quantity > 0);
       this.sortedItems = [...this.expectedItems, ...this.form.items.filter(x => !x.quantity)];
     } catch { }
@@ -41,7 +40,6 @@ export class HomeComponent implements OnInit {
   }
   openWaze() {
     const address = encodeURI(this.form.street + " " + this.form.city);
-    console.log(address);
     if (isDesktop())
       alert("נועד לעבוד רק בנייד :)")
 
