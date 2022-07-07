@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Remult, ValueConverters } from 'remult';
-import { DeliveryFormController, Item } from './delivery-form.controller';
+import { DeliveryFormController, Item, MondayDate } from './delivery-form.controller';
 
 @Component({
   selector: 'app-home',
@@ -14,26 +14,26 @@ export class HomeComponent implements OnInit {
   x = '';
   form = new DeliveryFormController(this.remult);
   async ngOnInit() {
+    console.log(MondayDate.now());
     let id = new URLSearchParams(window.location.search).get('id')!;
     if (id) {
       id = id.replace(/"/g, "");
     }
     try {
       await this.form.load(+id)
-      this.expectedItems = this.form.items.filter(x => x.quantity > 0);
-      this.sortedItems = [...this.expectedItems, ...this.form.items.filter(x => !x.quantity)];
+      this.expectedItems = this.form.items.filter(x => +x.quantity != 0);
+      this.sortedItems = [...this.expectedItems, ...this.form.items.filter(x => (+x.quantity) == 0 || x.quantity == null)];
     } catch { }
   }
   expectedItems: Item[] = [];
   sortedItems: Item[] = [];
   async updateDone() {
+    this.form.items = this.sortedItems;
     for (const item of this.form.items) {
-      if (item.quantity)
-      item.quantity = +item.quantity;
+      if (item.actualQuantity)
+        item.actualQuantity = item.actualQuantity.toString();
     }
-    let d = new Date();
-    await this.form.updateDone(ValueConverters.DateOnly.toJson!(d),
-      new Date().toTimeString().substring(0, 8))
+    await this.form.updateDone()
   }
   sameDate() {
     return this.form.driverSign?.date == ValueConverters.DateOnly.toJson!(new Date());

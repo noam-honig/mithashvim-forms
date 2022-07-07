@@ -5,7 +5,7 @@ export type Item = {
     id: number;
     name: string;
     quantity: number;
-    actualQuantity: number;
+    actualQuantity: string;
     notes: string;
 };
 
@@ -16,12 +16,25 @@ export type Item = {
             return null;
         },
         toDb: x => x
+    },
+    displayValue: (_, d) => {
+        if (!d)
+            return '';
+        return new Date(d.date + "T" + d.time + "Z").toLocaleString()
     }
 
 })
-class MondayDate {
+export class MondayDate {
     date = '';
     time = '';
+    static now(): MondayDate {
+        let d = new Date().toISOString();
+        return {
+            date: d.substring(0, 10),
+            time: d.substring(11, 19)
+        }
+    }
+
 };
 
 @Controller("deliveryForm")
@@ -144,26 +157,25 @@ query ($id: Int!) {
         //console.table(this.$.toArray().map((f) => ({ key: f.metadata.key, value: f.value })))
     }
     @BackendMethod({ allowed: true })
-    async signByContact(date: string, time: string) {
+    async signByContact() {
 
         var orig = new DeliveryFormController(this.remult);
         await orig.load(this.id);
         if (orig.contactSign || !orig.driverSign)
             throw "הטופס אינו מוכן לחצימה";
 
-        await this.update(2673923561, this.id, this.$.contactSign.metadata.options.monday!, JSON.stringify({ date, time }));
-        this.contactSign = { date, time };
+        this.contactSign = MondayDate.now();
+        await this.update(2673923561, this.id, this.$.contactSign.metadata.options.monday!, JSON.stringify(this.contactSign));
     }
     @BackendMethod({ allowed: true })
-    async updateDone(date: string, time: string) {
+    async updateDone() {
+        console.table(this.items);
         var orig = new DeliveryFormController(this.remult);
         await orig.load(this.id);
         if (orig.driverSign)
             throw "הטופס כבר חתום";
-
-        let value = JSON.stringify({
-            date, time
-        });
+        this.driverSign = MondayDate.now();
+        let value = JSON.stringify(this.driverSign);
 
         for (const item of this.items) {
             await this.update(2673928289, item.id, "dup__of_____", item.actualQuantity);
@@ -176,7 +188,6 @@ query ($id: Int!) {
             counter++;
         await this.update(2673923561, this.id, this.$.signatureCounter.metadata.options.monday!, counter.toString());
 
-        this.driverSign = { date, time };
     }
     @BackendMethod({ allowed: true })
     async cancelSign() {
@@ -203,7 +214,7 @@ query ($id: Int!) {
    }
  }
          `);
-            if (false) {
+            if (true) {
                 console.log(values, result);
             }
         } catch (err) {

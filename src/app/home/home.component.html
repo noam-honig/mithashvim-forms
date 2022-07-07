@@ -53,7 +53,7 @@
     <strong>פריטים שנאספו בפועל</strong>
     <mat-card>
       <ng-container *ngFor="let item of sortedItems">
-        <div *ngIf="item.actualQuantity">
+        <div *ngIf="+item.actualQuantity!=0">
 
           {{item.actualQuantity}} {{item.name}} {{item.notes?" - "+item.notes:undefined}}
         </div>
@@ -64,7 +64,7 @@
   <div *ngIf="form.driverSign" style="display: flex;
   flex-direction: column;
   align-items: center;">
-    ✅ הטופס נחתם לאחרונה ע"י {{form.driverName}} בשעה {{form.driverSign?.time}}
+    ✅ הטופס נחתם לאחרונה ע"י {{form.driverName}} ב {{form.$.driverSign.displayValue}}
 
     <a *ngIf="sameDate()" (click)="!!form.cancelSign();$event.preventDefault()" href="">לביטול חתימה
       ועדכון כמויות לחץ כאן</a>

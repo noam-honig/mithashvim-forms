@@ -26,9 +26,8 @@ export class ContactSignComponent implements OnInit {
 
   }
   async sign() {
-    let d = new Date();
-    await this.form.signByContact(ValueConverters.DateOnly.toJson!(d),
-      new Date().toTimeString().substring(0, 8))
+   
+    await this.form.signByContact()
   }
 
   sortedItems: Item[] = [];

@@ -24,6 +24,6 @@
     <div *ngIf="form.contactSign" style="display: flex;
         flex-direction: column;
         align-items: center;">
-        ✅ הטופס נחתם ע"י {{form.contact}} בשעה {{form.contactSign?.time}}
+        ✅ הטופס נחתם ע"י {{form.contact}} ב {{form.$.contactSign.displayValue}}
     </div>
     <div *ngIf="!form.id">טופס לא נמצא</div>
