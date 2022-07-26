@@ -8,8 +8,7 @@ export async function sendSms(phone: string, message: string, remult: Remult): P
     let accid = process.env["SMS_ACCID"];
     var from = 'Mitchashvim';
     phone = phone.replace(/\D/g, '');
-    console.log(phone);
-    phone = '0507330590';
+
 
     var t = new Date();
     var date = t.getFullYear() + '/' + (t.getMonth() + 1) + '/' + t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes() + ':' + t.getSeconds();
