@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Remult, ValueConverters } from 'remult';
+import { DialogService } from '../common/dialog';
 import { DeliveryFormController, Item, MondayDate } from './delivery-form.controller';
 
 @Component({
@@ -10,7 +11,7 @@ import { DeliveryFormController, Item, MondayDate } from './delivery-form.contro
 })
 export class HomeComponent implements OnInit {
 
-  constructor(private remult: Remult) { }
+  constructor(private remult: Remult, private dialog: DialogService) { }
   x = '';
   form = new DeliveryFormController(this.remult);
   async ngOnInit() {
@@ -33,7 +34,13 @@ export class HomeComponent implements OnInit {
       if (item.actualQuantity)
         item.actualQuantity = item.actualQuantity.toString();
     }
-    await this.form.updateDone()
+    await this.form.updateDone();
+    const result = Number(this.form.tempSmsResult);
+    if (result === 1 || result === 2) {
+      this.dialog.info("הודעת סמס נשלחה ל" + this.form.contact + " עם טופס אישור חתימה");
+    }
+    else
+      this.dialog.error("היתה בעיה עם שליחת ההודעה לאיש הקשר. הבעיה היתה: " + this.form.tempSmsResult);
   }
   sameDate() {
     return this.form.driverSign?.date == ValueConverters.DateOnly.toJson!(new Date());

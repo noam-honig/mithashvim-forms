@@ -1,5 +1,6 @@
 import { FieldType, Field, BackendMethod, Controller, ControllerBase, Fields } from "remult";
 import { gql } from "./getGraphQL";
+import { sendSms } from "./send-sms";
 
 export type Item = {
     id: number;
@@ -43,6 +44,8 @@ export class DeliveryFormController extends ControllerBase {
     id = 0;
     @Fields.string({ caption: 'שם הגוף' })
     name = '';
+    @Fields.string({ caption: "שם בית חולים/מחוז", monday: 'text7' })
+    hospitalName = '';
     @Fields.string({ monday: 'dup__of_____' })
     city = '';
     @Fields.string({ monday: 'text' })
@@ -72,6 +75,8 @@ export class DeliveryFormController extends ControllerBase {
 
     @Fields.integer({ monday: 'numbers8' })
     signatureCounter = 0;
+    @Fields.string()
+    tempSmsResult = '';
 
     @BackendMethod({ allowed: true })
     async load(deliveryId: number) {
@@ -187,7 +192,10 @@ query ($id: Int!) {
         else
             counter++;
         await this.update(2673923561, this.id, this.$.signatureCounter.metadata.options.monday!, counter.toString());
-
+        this.tempSmsResult = await sendSms(this.contactPhone,
+            `שלום ${this.name}, אנא אשר את תכולת הציוד שנאספה עבור מיזם מתחשבים בקישור הבא:
+https://mithashvim-forms.herokuapp.com/contact-sign?id=${this.id}`
+            , this.remult);
     }
     @BackendMethod({ allowed: true })
     async cancelSign() {

@@ -1,6 +1,8 @@
 <div style="display:flex;gap:8px;padding: 8px;flex-direction: column;" *ngIf="form.id">
   <div>שלום {{form.driverName}}, יש לך איסוף מ:</div>
   <div style="align-self:center;" class="mat-title">{{form.name}}</div>
+  <div style="align-self:center;margin-top:-24px;" class="mat-title"   *ngIf="form.hospitalName">בית חולים / מחוז:  {{form.hospitalName}}</div>
+  
   <div>
     <strong>כתובות</strong>
     <mat-card>
