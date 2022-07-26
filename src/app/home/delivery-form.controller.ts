@@ -193,7 +193,7 @@ query ($id: Int!) {
             counter++;
         await this.update(2673923561, this.id, this.$.signatureCounter.metadata.options.monday!, counter.toString());
         this.tempSmsResult = await sendSms(this.contactPhone,
-            `שלום ${this.name}, אנא אשר את תכולת הציוד שנאספה עבור מיזם מתחשבים בקישור הבא:
+            `שלום ${this.contact}, אנא אשר את תכולת הציוד שנאספה עבור מיזם מתחשבים בקישור הבא:
 https://mithashvim-forms.herokuapp.com/contact-sign?id=${this.id}`
             , this.remult);
     }
