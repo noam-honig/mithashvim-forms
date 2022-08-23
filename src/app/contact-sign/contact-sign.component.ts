@@ -20,8 +20,8 @@ export class ContactSignComponent implements OnInit {
     try {
       await this.form.load(+id)
       
-      const expectedItems = this.form.items.filter(x => x.quantity > 0);
-      this.sortedItems = [...expectedItems, ...this.form.items.filter(x => !x.quantity)];
+      const expectedItems = this.form.items.filter(x => (+x.actualQuantity) > 0);
+      this.sortedItems = [...expectedItems];
     } catch { }
 
   }
