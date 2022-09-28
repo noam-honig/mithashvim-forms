@@ -4,8 +4,8 @@ import { User } from '../app/users/user';
 import { SignInController } from '../app/users/SignInController';
 import { UpdatePasswordController } from '../app/users/UpdatePasswordController';
 import { DeliveryFormController } from '../app/home/delivery-form.controller';
-import { GraphQLClient, gql } from 'graphql-request'
 import { createPdfDocument } from './createPdfDocument';
+import { graphqlUploadFile } from './graphqlUploadFile';
 
 
 export const api = remultExpress({
@@ -17,11 +17,17 @@ export const api = remultExpress({
             return createPostgresConnection({ configuration: "heroku" })
         return undefined;
     },
-    initApi: async () => {
+    initApi: async (remult) => {
+
         // See: https://pdfkit.org/
-        createPdfDocument();
+   //     const c = new DeliveryFormController(remult);
+    //    await c.load(3270909578)
+    //    createPdfDocument(c);
+    //    await graphqlUploadFile(c.id)
     }
 });
 
-
-
+DeliveryFormController.createPdfAndUpload = async (c)=>{
+  await createPdfDocument(c);
+  await graphqlUploadFile(c.id);
+}
