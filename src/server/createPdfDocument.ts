@@ -37,10 +37,14 @@ export function createPdfDocument(controller: DeliveryFormController) {
   });
   doc.line(45, 72, 189, 72);
   doc.setR2L(true);
-  const head = [['תאריך ביצוע האיסוף', 'עיר', 'שם הגוף', 'שם בית חולים/שם המחוז']]
+  const head = [['תאריך ביצוע האיסוף', 'עיר', 'שם הגוף']]
   const data = [
-    [doLtr(parseToFullDateStr(d.driverSign?.date!)), d.city, d.name, d.hospitalName],
+    [doLtr(parseToFullDateStr(d.driverSign?.date!)), d.city, d.name],
   ]
+  if (d.hospitalName){
+    head[0].push("שם בית חולים/שם המחוז");
+    data[0].push(d.hospitalName);
+  }
 
   autoTable(doc, {
     head: head,

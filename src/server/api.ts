@@ -18,13 +18,12 @@ export const api = remultExpress({
         return undefined;
     },
 
-// TEST
     initApi: async (remult) => {
 
         // See: https://pdfkit.org/
-   //     const c = new DeliveryFormController(remult);
-    //    await c.load(3270909578)
-    //    createPdfDocument(c);
+       // const c = new DeliveryFormController(remult);
+       // await c.load(3251763644)
+       // createPdfDocument(c);
     //    await graphqlUploadFile(c.id)
     }
 });
