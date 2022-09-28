@@ -19,15 +19,15 @@ export class ContactSignComponent implements OnInit {
     }
     try {
       await this.form.load(+id)
-      
+
       const expectedItems = this.form.items.filter(x => (+x.actualQuantity) > 0);
       this.sortedItems = [...expectedItems];
     } catch { }
-
   }
   async sign() {
-   
-    await this.form.signByContact()
+
+    await this.form.signByContact();
+    window.open(`/api/pdf/${this.form.id}.pdf`);
   }
 
   sortedItems: Item[] = [];

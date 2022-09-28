@@ -167,11 +167,13 @@ query ($id: Int!) {
         var orig = new DeliveryFormController(this.remult);
         await orig.load(this.id);
         if (orig.contactSign || !orig.driverSign)
-            throw "הטופס אינו מוכן לחצימה";
+            throw "הטופס אינו מוכן לחתימה";
 
         this.contactSign = MondayDate.now();
         await this.update(2673923561, this.id, this.$.contactSign.metadata.options.monday!, JSON.stringify(this.contactSign));
+        await DeliveryFormController.createPdfAndUpload(this);
     }
+    static createPdfAndUpload =async  (data:DeliveryFormController)=>{};
     @BackendMethod({ allowed: true })
     async updateDone() {
         console.table(this.items);

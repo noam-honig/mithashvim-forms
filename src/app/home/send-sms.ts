@@ -7,6 +7,8 @@ export async function sendSms(phone: string, message: string, remult: Remult): P
     let pw = process.env["SMS_PW"];
     let accid = process.env["SMS_ACCID"];
     var from = 'Mitchashvim';
+    if (!accid)
+      return;
     phone = phone.replace(/\D/g, '');
 
 

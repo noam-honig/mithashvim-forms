@@ -3,16 +3,16 @@ import axios from 'axios';
 import FormData from 'form-data';
 
 
-async function graphqlUploadFile() {
+export async function graphqlUploadFile(id: any) {
     try {
         const formData = new FormData();
         formData.append('query', `#graphql
             mutation ($file:File!){
-             add_file_to_column(item_id:3159491062,column_id:"files9",file:$file){
+             add_file_to_column(item_id:${id},column_id:"files9",file:$file){
                  id
              }
             }`);
-        formData.append('variables[file]', createReadStream('c:/temp/1.pdf'));
+        formData.append('variables[file]', createReadStream('./db/'+id+'.pdf'));
         console.log(formData.getHeaders());
         const r = await axios({
             method: 'post',
