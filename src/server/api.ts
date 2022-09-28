@@ -17,6 +17,8 @@ export const api = remultExpress({
             return createPostgresConnection({ configuration: "heroku" })
         return undefined;
     },
+
+// TEST
     initApi: async (remult) => {
 
         // See: https://pdfkit.org/
