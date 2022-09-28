@@ -12,7 +12,7 @@ export async function graphqlUploadFile(id: any) {
                  id
              }
             }`);
-        formData.append('variables[file]', createReadStream('./db/'+id+'.pdf'));
+        formData.append('variables[file]', createReadStream('./tmp/'+id+'.pdf'));
         console.log(formData.getHeaders());
         const r = await axios({
             method: 'post',

@@ -8,6 +8,7 @@ import { expressjwt } from 'express-jwt';
 import compression from 'compression';
 import { api } from './api';
 import { getJwtSecret } from '../app/users/SignInController';
+import fs from 'fs';
 
 
 
@@ -21,12 +22,15 @@ async function startup() {
             contentSecurityPolicy: false,
         })
     );
+    if (!fs.existsSync('./tmp')) {
+        fs.mkdirSync('./tmp');
+    }
 
     app.use(api);
     app.use('/api/docs', swaggerUi.serve,
         swaggerUi.setup(api.openApiDoc({ title: 'remult-react-todo' })));
-     app.get('/api/pdf/:id.pdf',
-       (req,res)=>res.sendFile((process.cwd() +'/db/'+req.params['id']+'.pdf')))
+    app.get('/api/pdf/:id.pdf',
+        (req, res) => res.sendFile((process.cwd() + '/tmp/' + req.params['id'] + '.pdf')))
 
     app.use(express.static('dist/angular-starter-project'));
     app.use('/*', async (req, res) => {
